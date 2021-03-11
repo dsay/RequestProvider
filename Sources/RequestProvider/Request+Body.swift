@@ -18,13 +18,9 @@ public struct JSONBodyConverter: RequestComposer {
       
         guard let bodyParameters = parameters else { return request }
         
-        do {
-            let data = try JSONSerialization.data(withJSONObject: bodyParameters, options: [])
-            request.httpBody = data
-            return request
-        } catch {
-            throw RepositoryError.jsonEncodingFailed(error: error)
-        }
+        let data = try JSONSerialization.data(withJSONObject: bodyParameters, options: [])
+        request.httpBody = data
+        return request
     }
 }
 

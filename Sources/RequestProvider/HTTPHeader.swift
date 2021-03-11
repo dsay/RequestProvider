@@ -19,26 +19,12 @@ public struct HTTPHeader {
     public static func userAgent() -> String {
         let bundle = Bundle.main
         let device = UIDevice.current
-        let swiftRepository = SwiftRepository()
-        let alamofire = Alamofire()
         
         let appData = "\(bundle.bundle): \(bundle.version)(\(bundle.build))"
         let deviceData = "\(device.name) \(device.systemVersion)"
         
-        return "\(appData); \(deviceData); SwiftRepository: \(swiftRepository.version); Alamofire: \(alamofire.version)"
+        return "\(appData); \(deviceData);"
     }
-}
-
-fileprivate struct Alamofire {
-    
-    let bundle = Bundle(identifier: "org.cocoapods.Alamofire")
-    var version: String { bundle?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"}
-}
-
-fileprivate struct SwiftRepository {
-    
-    let bundle = Bundle(identifier: "org.cocoapods.SwiftRepository")
-    var version: String { bundle?.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"}
 }
 
 extension Bundle {

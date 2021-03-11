@@ -4,47 +4,20 @@ import SwiftRepository
 extension String: URLComposer {
     
     public func compose(into url: URL) throws -> URL {
-        
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RepositoryError.invalidURL(url: url)
-        }
-        
-        components.path += self.escape()
-        
-        guard let aUrl = components.url else {
-            throw RepositoryError.invalidURL(url: url)
-        }
-        
-        return aUrl
+        return self.isEmpty ? url : url.appendingPathComponent(self.escape())
     }
 }
 
 extension Array: URLComposer where Element == String {
     
-    public func toPath() -> String {
-        compactMap {
-            $0 == "" ? nil : $0
-        }.map {
-            $0.escape()
-        }.compactMap {
-            $0
-        }.compactMap {
-            $0.hasPrefix("/") ? $0 : "/" + $0
-        }.joined()
-    }
-    
     public func compose(into url: URL) throws -> URL {
-        
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RepositoryError.invalidURL(url: url)
-        }
-        
-        components.path += self.toPath()
-        
-        guard let aUrl = components.url else {
-            throw RepositoryError.invalidURL(url: url)
-        }
-        
-        return aUrl
+        return try self.reduce(url) { try $1.compose(into: $0) }
+    }
+}
+
+public extension String  {
+    
+    @inlinable static func / (lhs: String, rhs: String) -> String {
+        return rhs.isEmpty ? lhs : lhs + "/" + rhs
     }
 }

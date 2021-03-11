@@ -3,9 +3,12 @@ import SwiftRepository
 
 public extension RequestProvider {
     
+    var urlString: String { url.hasSuffix("/") ? String(url.dropLast()) : url }
+    
     func asURL() throws -> URL {
-        guard var url = URL(string: self.url) else {
-            throw RepositoryError.invalidStringURL(string: self.url)
+        
+        guard var url = URL(string: urlString) else {
+            throw RepositoryError.invalidStringURL(string: urlString)
         }
         
         url = try path.compose(into: url)
